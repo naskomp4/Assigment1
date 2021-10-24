@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "LhQ0gugxsj8lYJMaOiZ1uq0jXyRRw9md1dP2lhq/d5BPQKWF/UjMcvcw4u57T2jS5gM9uHB9StGehYyHyzkW5A==",
+  "dgSpecHash": "uGkY3Apo33WVXnpq5olyteSWP/mTdvJNC/j7INlVlC5Xduhphx612Hj4YS4fsZvjm5CstmXWoopoqTL7otqflw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Lenovo\\Desktop\\SFA_Local_Repo\\Assigment1\\src\\ToDoListApp\\ToDoListApp\\ToDoListApp.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
   "logs": []
 }
