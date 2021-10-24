@@ -11,7 +11,6 @@ namespace ToDoListApp.Data
 {
     public abstract class FileStorage<T> where T : Entity
     {
-
         protected abstract string FileName { get; }
 
         private Dictionary<int, T> _entitiesDictionary = new Dictionary<int, T>();
@@ -69,6 +68,8 @@ namespace ToDoListApp.Data
             if (_entitiesDictionary.ContainsKey(Id))
             {
                 _entitiesDictionary.Remove(Id);
+                WriteEntitiesToFile();
+                ReadAllAsDictionary();
                 WriteEntitiesToFile();
                 return;
             }
