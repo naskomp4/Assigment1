@@ -25,7 +25,6 @@ namespace ToDoListApp
 
             var indexView = host.Services.GetRequiredService<IndexView>(); //authentification + interface
            indexView.Render();
-            int x;
         }
     }
 }
