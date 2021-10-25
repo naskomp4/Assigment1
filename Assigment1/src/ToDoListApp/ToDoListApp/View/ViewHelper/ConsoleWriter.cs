@@ -84,5 +84,10 @@ namespace ToDoListApp.View.ViewHelper
         {
             PrintColoredString("Logged out successfully", ConsoleColor.Green);
         }
+
+        public void PrintException()
+        {
+            PrintColoredString("Wrong input", ConsoleColor.Red);
+        }
     }
 }

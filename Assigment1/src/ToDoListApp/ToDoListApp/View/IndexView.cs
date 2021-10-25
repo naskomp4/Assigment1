@@ -27,6 +27,10 @@ namespace ToDoListAapp.View
         {
             LoopMenu(() => LoginMenu());
             LoopMenu(() => MainMenu());
+            LoopMenu(() => UsersManagmentMenu());
+            LoopMenu(() => ToDoListManagmentMenu());
+            LoopMenu(() => TasksManagmentMenu());
+
         }
 
         private void LoopMenu(Func<bool> menu)
@@ -279,18 +283,16 @@ namespace ToDoListAapp.View
         }
         private void DeleteUser()
         {
-            Console.WriteLine("Enter a id of the user");
-            int userId = Convert.ToInt32(Console.ReadLine());
             try
             {
-                 _userService.DeleteUser(userId);
+                Console.WriteLine("Enter a id of the user");
+                int userId = Convert.ToInt32(Console.ReadLine());
+                _userService.DeleteUser(userId);
             }
 
             catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"User with this id:{userId} dosnt't exist");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
 
@@ -301,25 +303,23 @@ namespace ToDoListAapp.View
 
         private void EditUser()
         {
-            Console.WriteLine("Enter a user id:");
-            var id = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Enter a new username:");
-            var username = Console.ReadLine();
-            Console.WriteLine("Enter a new password:");
-            var password = Console.ReadLine();
-            Console.WriteLine("Enter a new first name:");
-            var firstName = Console.ReadLine();
-            Console.WriteLine("Enter a new last name:");
-            var lastName = Console.ReadLine();
             try
             {
+                Console.WriteLine("Enter a user id:");
+                var id = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter a new username:");
+                var username = Console.ReadLine();
+                Console.WriteLine("Enter a new password:");
+                var password = Console.ReadLine();
+                Console.WriteLine("Enter a new first name:");
+                var firstName = Console.ReadLine();
+                Console.WriteLine("Enter a new last name:");
+                var lastName = Console.ReadLine();
                 _userService.EditUser(id, username, password, firstName, lastName);
             }
-            catch
+            catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"User with this username:{username} already exist");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
 
@@ -346,52 +346,56 @@ namespace ToDoListAapp.View
 
         private void DeleteToDoList()
         {
-            Console.WriteLine("Enter a id of the ToDoLIst");
-            int listid = Convert.ToInt32(Console.ReadLine());
             try 
             {
+                Console.WriteLine("Enter a id of the ToDoLIst");
+                int listid = Convert.ToInt32(Console.ReadLine());
                 _toDoListService.DeleteToDoLIst(listid);
             }
-            catch
+            catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"List with this id:{listid} doesnt't exist");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
 
         private void EditToDoList()
         {
-            Console.WriteLine("Enter an Id of the list");
-            int listId = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Enter a name for the list");
-            string title = Console.ReadLine();
             try
             {
+                Console.WriteLine("Enter an Id of the list");
+                int listId = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter a name for the list");
+                string title = Console.ReadLine();
                 _toDoListService.EditToDoList(title, listId);
             }
             catch
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"List with this name:{title} already exist");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
 
         private bool OpenToDoList() 
         {
-            Console.WriteLine("Enter an id of the list");
-            int listId = Convert.ToInt32(Console.ReadLine());
-            if (_taskService.OpenListTasks(listId))
+            try
             {
-                return TasksManagmentMenu();
+                Console.WriteLine("Enter an id of the list");
+                int listId = Convert.ToInt32(Console.ReadLine());
+                if (_taskService.OpenListTasks(listId))
+                {
+                    return TasksManagmentMenu();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("This ToDoList is not yours");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    return ToDoListManagmentMenu();
+                }
             }
-            else
+            catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("This ToDoList is not yours");
-                Console.ForegroundColor = ConsoleColor.Red;
-                return ToDoListManagmentMenu();
+                _consoleWriter.PrintException();
+                return TasksManagmentMenu();
             }
         }
 
@@ -410,9 +414,7 @@ namespace ToDoListAapp.View
             }
             catch (ArgumentException)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid input");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
 
@@ -423,45 +425,35 @@ namespace ToDoListAapp.View
 
         private void DeleteTask()
         {
-            Console.WriteLine("Enter a id of the task");
-            int taskId = Convert.ToInt32(Console.ReadLine());
             try
             {
+                Console.WriteLine("Enter a id of the task");
+                int taskId = Convert.ToInt32(Console.ReadLine());
                 _taskService.DeleteTask(taskId);
             }
             catch
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Task with this id:{taskId} dosnt't exist");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
 
         private void EditTask()
         {
-            Console.WriteLine("Enter an Id of the task");
-            int taskId = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Enter a new name for the task");
-            string title = Console.ReadLine();
-            Console.WriteLine("Enter a new description for the task");
-            string description = Console.ReadLine();
             try
             {
+                Console.WriteLine("Enter an Id of the task");
+                int taskId = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter a new name for the task");
+                string title = Console.ReadLine();
+                Console.WriteLine("Enter a new description for the task");
+                string description = Console.ReadLine();
                 Console.WriteLine("Choose the task complition: Finished or Unfinished");
                 var istTaslComplete = Enum.Parse<CompletionStatus>(Console.ReadLine());
                 _taskService.EditTask(title, taskId, description, istTaslComplete);
             }
-            catch (ArgumentException)
+                 catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid input");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            catch 
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"List with this name:{title} or {title} already exist");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
     }

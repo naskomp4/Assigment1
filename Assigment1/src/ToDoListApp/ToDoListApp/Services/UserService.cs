@@ -24,6 +24,10 @@ namespace ToDoListApp.Services
 
         public void EditUser(int id, string name, string password, string firstName, string lastName)
         {
+            if (_userStorage.ReadAll().Any(u => u.Name == name))
+            {
+                throw new Exception($"User with name:{name} already exist");
+            }
             var user = _userStorage.Read(id);
             user.Name = name;
             user.Password = password;
