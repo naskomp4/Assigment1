@@ -13,12 +13,15 @@ namespace ToDoListApp.Services
         private readonly TaskStorage _taskStorage;
         private readonly UserService _userService;
         private readonly ToDoListService _toDoListService;
+        private readonly ToDoListStorage _toDoListStorage;
 
-        public TaskService(TaskStorage fileStorage, UserService userService, ToDoListService toDoListService)
+        public TaskService(TaskStorage fileStorage, UserService userService, ToDoListService toDoListService, ToDoListStorage toDoListStorage)
         {
             _taskStorage = fileStorage;
             _userService = userService;
             _toDoListService = toDoListService;
+            _toDoListStorage = toDoListStorage;
+
         }
         public void CreateTask(string title, string description, IsComplete isComplete)
         {
@@ -79,5 +82,20 @@ namespace ToDoListApp.Services
             task.LastModifierId = _userService.CurrentUser.Id;
             _taskStorage.Edit(task);
         }
-}
+        public bool OpenListTasks(int openedListId)
+        {
+            var singleToDoList = _toDoListStorage.Read(openedListId);
+            if (singleToDoList.Id == openedListId && _userService.CurrentUser.Id == singleToDoList.CreatorId)
+            {
+                Console.WriteLine($"List id:                    {singleToDoList.Id}");
+                Console.WriteLine($"List name:                  {singleToDoList.Title}");
+                Console.WriteLine($"List date of creation:      {singleToDoList.CreatedAt}");
+                Console.WriteLine($"List creator id:            {singleToDoList.CreatorId}");
+                Console.WriteLine($"List date of last change:   {singleToDoList.DateOfLastChange}");
+                Console.WriteLine($"List last modifier id:      {singleToDoList.LastModifierId}\n");
+                return true;
+            }
+            return false;
+        }
+    }
 }

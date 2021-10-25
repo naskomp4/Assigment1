@@ -158,8 +158,14 @@ namespace ToDoListAapp.View
                     EditToDoList();
                     return ToDoListManagmentMenu();
                 case "5":
-                    OpenToDoList();
-                    return TasksManagmentMenu();
+                    if (OpenToDoList())
+                    {
+                        return TasksManagmentMenu();
+                    }
+                    else
+                    {
+                        return ToDoListManagmentMenu();
+                    }
                 case "6":
                     LoopMenu(() => MainMenu());
                     return true;
@@ -312,10 +318,21 @@ namespace ToDoListAapp.View
             string title = Console.ReadLine();
             _toDoListService.EditToDoList(title, listId);
         }
-        private void OpenToDoList() 
+        private bool OpenToDoList() 
         {
             Console.WriteLine("Enter an id of the list");
             int listId = Convert.ToInt32(Console.ReadLine());
+            if (_taskService.OpenListTasks(listId))
+            {
+                return TasksManagmentMenu();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("This ToDoList is not yours");
+                Console.ForegroundColor = ConsoleColor.Red;
+                return ToDoListManagmentMenu();
+            }
         }
         private void AddToTask()
         {
