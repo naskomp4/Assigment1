@@ -15,6 +15,7 @@ namespace ToDoListApp.Services
         private readonly ToDoListService _toDoListService;
         private readonly ToDoListStorage _toDoListStorage;
 
+        public int currentToDoList;
         public TaskService(TaskStorage fileStorage, UserService userService, ToDoListService toDoListService, ToDoListStorage toDoListStorage)
         {
             _taskStorage = fileStorage;
@@ -34,7 +35,7 @@ namespace ToDoListApp.Services
             var task = new Task()
             {
                 Id = _taskStorage.GetNextId(),
-                ToDoListId = _toDoListService.CurrentToDoList.Id,
+                ToDoListId = currentToDoList,
                 Title = title,
                 Description = description,
                 IsComplete = isComplete,
@@ -52,12 +53,14 @@ namespace ToDoListApp.Services
             {
                 if (_userService.CurrentUser.Id == item.CreatorId)
                 {
-                    Console.WriteLine($"List id:                    {item.Id}");
-                    Console.WriteLine($"List name:                  {item.Title}");
-                    Console.WriteLine($"List date of creation:      {item.CreatedAt}");
-                    Console.WriteLine($"List creator id:            {item.CreatorId}");
-                    Console.WriteLine($"List date of last change:   {item.DateOfLastChange}");
-                    Console.WriteLine($"List last modifier id:      {item.LastModifierId}\n");
+                    Console.WriteLine($"Task id:                    {item.Id}");
+                    Console.WriteLine($"Task name:                  {item.Title}");
+                    Console.WriteLine($"Task description:           {item.Description}");
+                    Console.WriteLine($"Task status:                {item.IsComplete}");
+                    Console.WriteLine($"Task date of creation:      {item.CreatedAt}");
+                    Console.WriteLine($"Task creator id:            {item.CreatorId}");
+                    Console.WriteLine($"Task date of last change:   {item.DateOfLastChange}");
+                    Console.WriteLine($"Task last modifier id:      {item.LastModifierId}\n");
                 }
             }
         }
@@ -71,7 +74,7 @@ namespace ToDoListApp.Services
         public void EditTask(string title, int currentTaskId, string description, IsComplete isComplete)
         {
             var task = _taskStorage.Read(currentTaskId);
-            if (task.CreatorId != _userService.CurrentUser.Id && _toDoListService.CurrentToDoList.Id == task.ToDoListId)
+            if (task.CreatorId != _userService.CurrentUser.Id && currentToDoList == task.ToDoListId)
             {
                 throw new Exception($"You are not the creator of the ToDo list ");
             }
@@ -87,12 +90,10 @@ namespace ToDoListApp.Services
             var singleToDoList = _toDoListStorage.Read(openedListId);
             if (singleToDoList.Id == openedListId && _userService.CurrentUser.Id == singleToDoList.CreatorId)
             {
+                currentToDoList = openedListId;
+                Console.WriteLine("Current ToDoList :");
                 Console.WriteLine($"List id:                    {singleToDoList.Id}");
                 Console.WriteLine($"List name:                  {singleToDoList.Title}");
-                Console.WriteLine($"List date of creation:      {singleToDoList.CreatedAt}");
-                Console.WriteLine($"List creator id:            {singleToDoList.CreatorId}");
-                Console.WriteLine($"List date of last change:   {singleToDoList.DateOfLastChange}");
-                Console.WriteLine($"List last modifier id:      {singleToDoList.LastModifierId}\n");
                 return true;
             }
             return false;
