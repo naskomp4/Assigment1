@@ -112,7 +112,7 @@ namespace ToDoListAapp.View
         private bool UsersManagmentMenu()
         {
             _consoleWriter.PrintUsersManegment();
-            Console.WriteLine("PLease enter a command");
+            Console.WriteLine("PLease enter a valid command");
             string adminUserChoise = Console.ReadLine();
 
             switch (adminUserChoise)
@@ -150,7 +150,7 @@ namespace ToDoListAapp.View
                 return true;
             }
             _consoleWriter.PrintTodoListManagment();
-            Console.WriteLine("PLease enter a command");
+            Console.WriteLine("PLease enter a valid command");
             string toDoManagmentUserChoise = Console.ReadLine();
             switch (toDoManagmentUserChoise)
             {
@@ -191,7 +191,7 @@ namespace ToDoListAapp.View
         private bool TasksManagmentMenu()
         {
             _consoleWriter.PrintTaskManegment();
-            Console.WriteLine("PLease enter a command");
+            Console.WriteLine("PLease enter a valid command");
             string tasksManagmentUserChoise = Console.ReadLine();
             switch (tasksManagmentUserChoise)
             {
@@ -312,17 +312,15 @@ namespace ToDoListAapp.View
 
         private void AddToDoList()
         {
-            Console.WriteLine("Enter a name for the list");
-            string title = Console.ReadLine();
             try
             {
+                Console.WriteLine("Enter a name for the list");
+                string title = Console.ReadLine();
                 _toDoListService.CrateToDoList(title);
             }
             catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"List with this name:{title} already exist");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
 
