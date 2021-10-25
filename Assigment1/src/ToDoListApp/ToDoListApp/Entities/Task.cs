@@ -9,6 +9,6 @@ namespace ToDoListApp.Entities
         public int ToDoListId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string IsComplete { get; set; }
+        public IsComplete IsComplete { get; set; }
     }
 }

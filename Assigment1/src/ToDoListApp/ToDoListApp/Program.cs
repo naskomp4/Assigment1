@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using ToDoListAapp.View;
 using ToDoListApp.Data;
 using ToDoListApp.Services;
+using ToDoListApp.View.ViewHelper;
 
 namespace ToDoListApp
 {
@@ -15,15 +16,16 @@ namespace ToDoListApp
             var host = Host.CreateDefaultBuilder().ConfigureServices((hostBuilderContext, services) =>
             {
                 services.AddSingleton<UserService>();
-                services.AddSingleton<ToDoListService>();
-                services.AddSingleton<TaskService>();
-                services.AddSingleton<IndexView>();
-                services.AddSingleton<ToDoListStorage>();
-                services.AddSingleton<TaskStorage>();
                 services.AddSingleton<UserStorage>();
+                services.AddSingleton<ToDoListService>();
+                services.AddSingleton<ToDoListStorage>();
+                services.AddSingleton<TaskService>();
+                services.AddSingleton<TaskStorage>();
+                services.AddSingleton<ConsoleWriter>();
+                services.AddSingleton<IndexView>();
             }).UseConsoleLifetime().Build();
 
-            var indexView = host.Services.GetRequiredService<IndexView>(); //authentification + interface
+            var indexView = host.Services.GetRequiredService<IndexView>();
            indexView.Render();
         }
     }

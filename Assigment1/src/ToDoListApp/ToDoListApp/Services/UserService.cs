@@ -10,10 +10,8 @@ namespace ToDoListApp.Services
 {
     public class UserService
     {
-
-        public User CurrentUser { get; private set; }
         private readonly UserStorage _userStorage;
-
+        public User CurrentUser { get; private set; }
         public UserService(UserStorage fileStorage)
         {
             _userStorage = fileStorage;
@@ -25,41 +23,27 @@ namespace ToDoListApp.Services
 
         public void EditUser(int id, string name, string password, string firstName, string lastName)
         {
-            if (_userStorage.ReadAll().Any(u => u.Id == id))
-            {
-                DateTime now = DateTime.Now;
-                var data = new User()
-                {
-                    Id = id,
-                    Name = name,
-                    Password = password,
-                    FirstName = firstName,
-                    LastName = lastName,
-                    DateOfLastChange = now,
-                    LastModifierId = CurrentUser != null ? CurrentUser.Id : 0,
-                };
-                _userStorage.Edit(data);
-            }
-            else
-            {
-                Console.WriteLine($"Entity with id:{id} does not exist");
-            }
+            var user = _userStorage.Read(id);
+            user.Name = name;
+            user.Password = password;
+            user.FirstName = firstName;
+            user.LastName = lastName;
+            user.DateOfLastChange = DateTime.Now;
+            user.LastModifierId = CurrentUser.Id;
+            _userStorage.Edit(user);
         }
         public void CreateUser(string name, string password, string firstName, string lastname, Role role)
         {
-
             if (_userStorage.ReadAll().Any(u => u.Name == name))
             {
                 throw new Exception($"User with name:{name} already exist");
             }
-
-            int newUniqueId = _userStorage.GetLastId() + 1;
             DateTime now = DateTime.Now;
             var user = new User()
             {
                 Name = name,
                 Password = password,
-                Id = newUniqueId,
+                Id = _userStorage.GetNextId(),
                 CreatedAt = now,
                 FirstName = firstName,
                 LastName = lastname,
@@ -69,15 +53,11 @@ namespace ToDoListApp.Services
                 LastModifierId = CurrentUser != null ? CurrentUser.Id : 1,
             };
             _userStorage.Add(user);
-
         }
 
         public void DeleteUser(int id)
         {
-            if (_userStorage.ReadAll().Any(u => u.Id == id))
-            {
-                _userStorage.Delete(id);
-            }
+            _userStorage.Delete(id);
         }
 
         public void ListAllUsers()
@@ -118,10 +98,5 @@ namespace ToDoListApp.Services
         {
             return CurrentUser == null;
         }
-        public int GetUserId()
-        {
-            return CurrentUser.Id;
-        }
-        
     }
 }

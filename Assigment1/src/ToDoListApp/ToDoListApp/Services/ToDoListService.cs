@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,43 +11,41 @@ namespace ToDoListApp.Services
 {
     public class ToDoListService
     {
-        public SingleToDoList CurrentToDolist { get; private set; }
+        public User CurrentToDoList { get; private set; }
         private readonly ToDoListStorage _toDoListStorage;
-        private readonly UserStorage _userStorage;
+        private readonly UserService _userService;
 
-        public ToDoListService(ToDoListStorage fileStorage)
+        public ToDoListService(ToDoListStorage fileStorage, UserService userService)
         {
             _toDoListStorage = fileStorage;
+            _userService = userService;
         }
-    
 
-        public void CrateToDoList(string title,int currentUserId)
+
+        public void CrateToDoList(string title)
         {
-
-            if (_toDoListStorage.ReadAll().Any(l => l.Title == title))
+            if (_toDoListStorage.ReadAll().Any(l => l.Title == title && l.CreatorId == _userService.CurrentUser.Id))
             {
                 throw new Exception($"ToDo list with the same name:{title} already exist");
             }
-
-            int newUniqueId = _toDoListStorage.GetLastId() + 1;
             DateTime now = DateTime.Now;
             var toDoList = new SingleToDoList()
             {
                 Title = title,
-                Id = newUniqueId,
+                Id = _toDoListStorage.GetNextId(),
                 CreatedAt = now,
-                CreatorId = currentUserId,
+                CreatorId = _userService.CurrentUser.Id,
                 DateOfLastChange = now,
-                LastModifierId = currentUserId,
+                LastModifierId = _userService.CurrentUser.Id,
             };
             _toDoListStorage.Add(toDoList);
         }
-        public void ListAllToDoLists(int currentUserId)
+        public void ListAllToDoLists()
         {
             var listAll = _toDoListStorage.ReadAll();
             foreach (var item in listAll)
             {
-                if (currentUserId == item.CreatorId)
+                if (_userService.CurrentUser.Id == item.CreatorId)
                 {
                     Console.WriteLine($"List id:                    {item.Id}");
                     Console.WriteLine($"List name:                  {item.Title}");
@@ -57,37 +56,24 @@ namespace ToDoListApp.Services
                 }
             }
         }
-
-        public void DeleteToDoLIst(int currentListId, int currentUserId)
+        public void DeleteToDoLIst(int currentListId)
         {
-            if (!_toDoListStorage.ReadAll().Any(u => u.CreatorId == currentUserId && u.Id == currentListId))
+            if (_toDoListStorage.Read(currentListId).CreatorId == _userService.CurrentUser.Id)
             {
                 _toDoListStorage.Delete(currentListId);
             }
         }
-    
-        public void EditToDoList(string title ,int currentUserId , int currentListId)
+        public void EditToDoList(string title, int currentListId)
         {
-            if (!_toDoListStorage.ReadAll().Any(u => u.CreatorId == currentUserId && u.Id == currentListId))
+            var singleToDoList = _toDoListStorage.Read(currentListId);
+            if (singleToDoList.CreatorId != _userService.CurrentUser.Id)
             {
-                Console.WriteLine("You are not the creator of the list");
-                // throw new Exception($"You are not the creator of the ToDo list ");
-                return;
+                throw new Exception($"You are not the creator of the ToDo list ");
             }
-            DateTime now = DateTime.Now;
-            var toDoList = new SingleToDoList()
-            {
-                Title = title,
-                Id = currentListId,
-                CreatedAt = now,
-                DateOfLastChange = now,
-                LastModifierId = currentUserId,
-            };
-            _toDoListStorage.Edit(toDoList);
-        }
-        public int GetToDoListId()
-        {
-            return CurrentToDolist.Id;
+            singleToDoList.Title = title;
+            singleToDoList.DateOfLastChange = DateTime.Now;
+            singleToDoList.LastModifierId = _userService.CurrentUser.Id;
+            _toDoListStorage.Edit(singleToDoList);
         }
     }
 }

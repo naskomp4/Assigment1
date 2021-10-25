@@ -7,45 +7,47 @@ using ToDoListApp.Entities;
 
 namespace ToDoListApp.Services
 {
-   public class TaskService
+    public class TaskService
     {
         public Task CurrentTask { get; set; }
         private readonly TaskStorage _taskStorage;
+        private readonly UserService _userService;
+        private readonly ToDoListService _toDoListService;
 
-        public TaskService(TaskStorage fileStorage)
+        public TaskService(TaskStorage fileStorage, UserService userService, ToDoListService toDoListService)
         {
             _taskStorage = fileStorage;
+            _userService = userService;
+            _toDoListService = toDoListService;
         }
-        public void CreateTask(string title,string description, int toDoListId, string isComplete ,int currentUserId)
+        public void CreateTask(string title, string description, IsComplete isComplete)
         {
 
             if (_taskStorage.ReadAll().Any(t => t.Title == title && t.Description == description))
             {
                 throw new Exception($"Task with the same name: {title} and description: {description} already exist");
             }
-
-            int newUniqueId = _taskStorage.GetLastId() + 1;
             DateTime now = DateTime.Now;
             var task = new Task()
             {
-                Id = newUniqueId,
-                ToDoListId = toDoListId,
+                Id = _taskStorage.GetNextId(),
+                ToDoListId = _toDoListService.CurrentToDoList.Id,
                 Title = title,
                 Description = description,
                 IsComplete = isComplete,
                 CreatedAt = now,
-                CreatorId = currentUserId,
+                CreatorId = _userService.CurrentUser.Id,
                 DateOfLastChange = now,
-                LastModifierId = currentUserId,
+                LastModifierId = _userService.CurrentUser.Id,
             };
             _taskStorage.Add(task);
         }
-        public void ListAllTasks(int currentUserId, int currentListId)
+        public void ListAllTasks()
         {
             var listAll = _taskStorage.ReadAll();
             foreach (var item in listAll)
             {
-                if (currentUserId == item.CreatorId && currentListId == item.ToDoListId)
+                if (_userService.CurrentUser.Id == item.CreatorId)
                 {
                     Console.WriteLine($"List id:                    {item.Id}");
                     Console.WriteLine($"List name:                  {item.Title}");
@@ -56,33 +58,26 @@ namespace ToDoListApp.Services
                 }
             }
         }
-            public void DeleteTask(int id)
-            {
-                if (_taskStorage.ReadAll().Any(u => u.Id == id))
-                {
-                    _taskStorage.Delete(id);
-                }
-            }
-        public void EditTask(string title, int currentUserId, int currentListId ,int currentTaskId,string description,string isComplete)
+        public void DeleteTask(int curentTaskid)
         {
-            if (_taskStorage.ReadAll().Any(u => u.Id == currentListId))
+            if (_taskStorage.Read(curentTaskid).CreatorId == _userService.CurrentUser.Id)
             {
-                throw new Exception($"Task with the same name: {title} and description: {description} already exist");
+                _taskStorage.Delete(curentTaskid);
             }
-            DateTime now = DateTime.Now;
-            var task = new Task()
+        }
+        public void EditTask(string title, int currentTaskId, string description, IsComplete isComplete)
+        {
+            var task = _taskStorage.Read(currentTaskId);
+            if (task.CreatorId != _userService.CurrentUser.Id && _toDoListService.CurrentToDoList.Id == task.ToDoListId)
             {
-                Id = currentTaskId,
-                ToDoListId = currentListId,
-                Title = title,
-                Description = description,
-                IsComplete = isComplete,
-                CreatedAt = now,
-                CreatorId = currentUserId,
-                DateOfLastChange = now,
-                LastModifierId = currentUserId,
-            };
+                throw new Exception($"You are not the creator of the ToDo list ");
+            }
+            task.Title = title;
+            task.Description = description;
+            task.IsComplete = isComplete;
+            task.DateOfLastChange = DateTime.Now;
+            task.LastModifierId = _userService.CurrentUser.Id;
             _taskStorage.Edit(task);
         }
-    }
+}
 }

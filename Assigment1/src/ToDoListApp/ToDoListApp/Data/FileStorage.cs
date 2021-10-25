@@ -12,6 +12,7 @@ namespace ToDoListApp.Data
     public abstract class FileStorage<T> where T : Entity
     {
         protected abstract string FileName { get; }
+        private int _idIndex;
 
         private Dictionary<int, T> _entitiesDictionary = new Dictionary<int, T>();
         public FileStorage()
@@ -23,6 +24,7 @@ namespace ToDoListApp.Data
             else
             {
                 ReadAllAsDictionary();
+                _idIndex = IsEmpty() ?  0 : _entitiesDictionary.Keys.Max();
             }
         }
 
@@ -30,9 +32,9 @@ namespace ToDoListApp.Data
         {
             return _entitiesDictionary.Count == 0;
         }
-        public int GetLastId()
+        public int GetNextId()
         {
-            return _entitiesDictionary.LastOrDefault().Key;
+            return ++_idIndex;
         }
         public void Add(T data)
         {
@@ -40,6 +42,7 @@ namespace ToDoListApp.Data
             {
                 _entitiesDictionary.Add(data.Id, data);
                 WriteEntitiesToFile();
+                _idIndex++;
                 return;
             }
 
@@ -54,13 +57,17 @@ namespace ToDoListApp.Data
                 WriteEntitiesToFile();
                 return;
             }
-            throw new ArgumentException($"Entity with id:{data.Id} does not exist");
+            throw new Exception($"Entity with id:{data.Id} does not exist");
         }
 
 
         public T Read(int Id)
         {
-            return _entitiesDictionary[Id];
+            if (_entitiesDictionary.ContainsKey(Id))
+            {
+                return _entitiesDictionary[Id];
+            }
+            throw new Exception($"Entity with id:{Id} does not exist");
         }
 
         public void Delete(int Id)
@@ -68,8 +75,6 @@ namespace ToDoListApp.Data
             if (_entitiesDictionary.ContainsKey(Id))
             {
                 _entitiesDictionary.Remove(Id);
-                WriteEntitiesToFile();
-                ReadAllAsDictionary();
                 WriteEntitiesToFile();
                 return;
             }
