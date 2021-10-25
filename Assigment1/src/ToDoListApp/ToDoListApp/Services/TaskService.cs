@@ -24,7 +24,7 @@ namespace ToDoListApp.Services
             _toDoListStorage = toDoListStorage;
 
         }
-        public void CreateTask(string title, string description, IsComplete isComplete)
+        public void CreateTask(string title, string description, CompletionStatus isComplete)
         {
 
             if (_taskStorage.ReadAll().Any(t => t.Title == title && t.Description == description))
@@ -71,7 +71,7 @@ namespace ToDoListApp.Services
                 _taskStorage.Delete(curentTaskid);
             }
         }
-        public void EditTask(string title, int currentTaskId, string description, IsComplete isComplete)
+        public void EditTask(string title, int currentTaskId, string description, CompletionStatus isComplete)
         {
             var task = _taskStorage.Read(currentTaskId);
             if (task.CreatorId != _userService.CurrentUser.Id && currentToDoList == task.ToDoListId)

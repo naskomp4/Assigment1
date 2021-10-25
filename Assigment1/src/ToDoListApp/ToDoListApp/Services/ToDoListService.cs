@@ -29,7 +29,7 @@ namespace ToDoListApp.Services
                 throw new Exception($"ToDo list with the same name:{title} already exist");
             }
             DateTime now = DateTime.Now;
-            var toDoList = new SingleToDoList()
+            var toDoList = new ToDoList()
             {
                 Title = title,
                 Id = _toDoListStorage.GetNextId(),

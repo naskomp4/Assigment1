@@ -344,7 +344,7 @@ namespace ToDoListAapp.View
             try
             {
                 Console.WriteLine("Choose the task complition: Finished or Unfinished");
-                var istTaslComplete = Enum.Parse<IsComplete>(Console.ReadLine());
+                var istTaslComplete = Enum.Parse<CompletionStatus>(Console.ReadLine());
                 _taskService.CreateTask(title, description, istTaslComplete);
             }
             catch (ArgumentException)
@@ -375,7 +375,7 @@ namespace ToDoListAapp.View
             try
             {
                 Console.WriteLine("Choose the task complition: Finished or Unfinished");
-                var istTaslComplete = Enum.Parse<IsComplete>(Console.ReadLine());
+                var istTaslComplete = Enum.Parse<CompletionStatus>(Console.ReadLine());
                 _taskService.EditTask(title, taskId, description, istTaslComplete);
             }
             catch (ArgumentException)

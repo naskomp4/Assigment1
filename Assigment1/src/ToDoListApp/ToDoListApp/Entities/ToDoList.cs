@@ -4,8 +4,8 @@ using System.Text;
 
 namespace ToDoListApp.Entities
 {
-    public enum IsComplete
+    public class ToDoList : Entity
     {
-        Finished,Unfinished
+        public string Title { get; set; }
     }
 }
