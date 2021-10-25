@@ -228,15 +228,11 @@ namespace ToDoListAapp.View
                 Console.WriteLine("Enter your password:");
                 string userPassword = Console.ReadLine();
                 _userService.LogIn(userName, userPassword);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Login successful.");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintLoginSuccess();
             }
             catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Login failed.");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintLoginFailed();
                 Render();
             }
         }
@@ -250,17 +246,16 @@ namespace ToDoListAapp.View
 
         private void AddUser()
         {
-            Console.WriteLine("Enter a new username:");
-            string username = Console.ReadLine();
-            Console.WriteLine("Enter a password:");
-            string password = Console.ReadLine();
-            Console.WriteLine("Enter first name:");
-            string firstName = Console.ReadLine();
-            Console.WriteLine("Enter last name:");
-            string lastName = Console.ReadLine();
-
             try
             {
+                Console.WriteLine("Enter a new username:");
+                string username = Console.ReadLine();
+                Console.WriteLine("Enter a password:");
+                string password = Console.ReadLine();
+                Console.WriteLine("Enter first name:");
+                string firstName = Console.ReadLine();
+                Console.WriteLine("Enter last name:");
+                string lastName = Console.ReadLine();
                 Console.WriteLine("Choose a role: Admin or User");
                 var role = Enum.Parse<Role>(Console.ReadLine());
                 _userService.CreateUser(username, password, firstName, lastName, role);
@@ -268,17 +263,9 @@ namespace ToDoListAapp.View
                 Console.WriteLine($"User with name {username} added");
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            catch (ArgumentException)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid role");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
             catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"User with name {username} already exists");
-                Console.ForegroundColor = ConsoleColor.White;
+                _consoleWriter.PrintException();
             }
         }
         private void DeleteUser()
@@ -331,7 +318,7 @@ namespace ToDoListAapp.View
             {
                 _toDoListService.CrateToDoList(title);
             }
-            catch
+            catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"List with this name:{title} already exist");
@@ -368,7 +355,7 @@ namespace ToDoListAapp.View
                 string title = Console.ReadLine();
                 _toDoListService.EditToDoList(title, listId);
             }
-            catch
+            catch (Exception)
             {
                 _consoleWriter.PrintException();
             }

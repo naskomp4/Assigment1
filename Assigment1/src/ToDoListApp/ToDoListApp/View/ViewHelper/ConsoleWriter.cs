@@ -89,5 +89,15 @@ namespace ToDoListApp.View.ViewHelper
         {
             PrintColoredString("Wrong input", ConsoleColor.Red);
         }
+
+        public void PrintLoginSuccess()
+        {
+            PrintColoredString("Logged in successfully", ConsoleColor.Green);
+        }
+
+        public void PrintLoginFailed()
+        {
+            PrintColoredString("Login failed", ConsoleColor.Red);
+        }
     }
 }
