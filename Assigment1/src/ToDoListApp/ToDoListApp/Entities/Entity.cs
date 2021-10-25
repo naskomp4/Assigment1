@@ -9,9 +9,14 @@ namespace ToDoListApp.Entities
     public abstract class Entity
     {
         public int Id { get; set; }
+
         public DateTime CreatedAt { get; set; }
+
         public int CreatorId { get; set; }
-        public DateTime DateOfLastChange { get; set; }
-        public int LastModifierId { get; set; }
+
+        public DateTime LastModified { get; set; }
+
+        public int LastModifiedId { get; set; }
+
     }
 }

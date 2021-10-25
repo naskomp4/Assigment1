@@ -16,6 +16,7 @@ namespace ToDoListApp.Services
         private readonly ToDoListStorage _toDoListStorage;
 
         public int currentToDoList;
+
         public TaskService(TaskStorage fileStorage, UserService userService, ToDoListService toDoListService, ToDoListStorage toDoListStorage)
         {
             _taskStorage = fileStorage;
@@ -24,6 +25,7 @@ namespace ToDoListApp.Services
             _toDoListStorage = toDoListStorage;
 
         }
+
         public void CreateTask(string title, string description, CompletionStatus isComplete)
         {
 
@@ -41,11 +43,12 @@ namespace ToDoListApp.Services
                 IsComplete = isComplete,
                 CreatedAt = now,
                 CreatorId = _userService.CurrentUser.Id,
-                DateOfLastChange = now,
-                LastModifierId = _userService.CurrentUser.Id,
+                LastModified = now,
+                LastModifiedId = _userService.CurrentUser.Id,
             };
             _taskStorage.Add(task);
         }
+
         public void ListAllTasks()
         {
             var listAll = _taskStorage.ReadAll();
@@ -59,11 +62,12 @@ namespace ToDoListApp.Services
                     Console.WriteLine($"Task status:                {item.IsComplete}");
                     Console.WriteLine($"Task date of creation:      {item.CreatedAt}");
                     Console.WriteLine($"Task creator id:            {item.CreatorId}");
-                    Console.WriteLine($"Task date of last change:   {item.DateOfLastChange}");
-                    Console.WriteLine($"Task last modifier id:      {item.LastModifierId}\n");
+                    Console.WriteLine($"Task date of last change:   {item.LastModified}");
+                    Console.WriteLine($"Task last modifier id:      {item.LastModifiedId}\n");
                 }
             }
         }
+
         public void DeleteTask(int curentTaskid)
         {
             if (_taskStorage.Read(curentTaskid).CreatorId == _userService.CurrentUser.Id)
@@ -71,6 +75,7 @@ namespace ToDoListApp.Services
                 _taskStorage.Delete(curentTaskid);
             }
         }
+
         public void EditTask(string title, int currentTaskId, string description, CompletionStatus isComplete)
         {
             var task = _taskStorage.Read(currentTaskId);
@@ -81,10 +86,11 @@ namespace ToDoListApp.Services
             task.Title = title;
             task.Description = description;
             task.IsComplete = isComplete;
-            task.DateOfLastChange = DateTime.Now;
-            task.LastModifierId = _userService.CurrentUser.Id;
+            task.LastModified = DateTime.Now;
+            task.LastModifiedId = _userService.CurrentUser.Id;
             _taskStorage.Edit(task);
         }
+
         public bool OpenListTasks(int openedListId)
         {
             var singleToDoList = _toDoListStorage.Read(openedListId);

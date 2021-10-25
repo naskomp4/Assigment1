@@ -15,6 +15,7 @@ namespace ToDoListAapp.View
         private readonly ToDoListService _toDoListService;
         private readonly TaskService _taskService;
         private readonly ConsoleWriter _consoleWriter;
+
         public IndexView(UserService userService, ToDoListService toDoListServices, TaskService taskService, ConsoleWriter consoleWriter)
         {
             _userService = userService;
@@ -27,6 +28,7 @@ namespace ToDoListAapp.View
             LoopMenu(() => LoginMenu());
             LoopMenu(() => MainMenu());
         }
+
         private void LoopMenu(Func<bool> menu)
         {
             bool shoudExitMenu = false;
@@ -35,6 +37,7 @@ namespace ToDoListAapp.View
                 shoudExitMenu = menu();
             }
         }
+
         private bool LoginMenu()
         {
             _consoleWriter.PrintLoginMenu();
@@ -53,6 +56,7 @@ namespace ToDoListAapp.View
                     return false;
             }
         }
+
         private bool MainMenu()
         {
             if (_userService.CurrentUser.Role == Role.Admin)
@@ -133,6 +137,7 @@ namespace ToDoListAapp.View
                     return UsersManagmentMenu();
             }
         }
+
         private bool ToDoListManagmentMenu()
         {
             if (_userService.IsUserLogged())
@@ -178,6 +183,7 @@ namespace ToDoListAapp.View
                     return ToDoListManagmentMenu();
             }
         }
+
         private bool TasksManagmentMenu()
         {
             _consoleWriter.PrintTaskManegment();
@@ -208,6 +214,7 @@ namespace ToDoListAapp.View
                     return TasksManagmentMenu();
             }
         }
+
         private void LogIn()
         {
             try
@@ -229,6 +236,7 @@ namespace ToDoListAapp.View
                 Render();
             }
         }
+
         private void LogOut()
         {
             _userService.LogOut();
@@ -267,17 +275,18 @@ namespace ToDoListAapp.View
                 Console.WriteLine($"User with name {username} already exists");
             }
         }
-
         private void DeleteUser()
         {
             Console.WriteLine("Enter a id of the user");
             int id = Convert.ToInt32(Console.ReadLine());
             _userService.DeleteUser(id);
         }
+
         private void ListAllUsers()
         {
             _userService.ListAllUsers();
         }
+
         private void EditUser()
         {
             Console.WriteLine("Enter a user id:");
@@ -304,12 +313,14 @@ namespace ToDoListAapp.View
         {
             _toDoListService.ListAllToDoLists();
         }
+
         private void DeleteToDoList()
         {
             Console.WriteLine("Enter a id of the ToDoLIst");
             int listid = Convert.ToInt32(Console.ReadLine());
             _toDoListService.DeleteToDoLIst(listid);
         }
+
         private void EditToDoList()
         {
             Console.WriteLine("Enter an Id of the list");
@@ -318,6 +329,7 @@ namespace ToDoListAapp.View
             string title = Console.ReadLine();
             _toDoListService.EditToDoList(title, listId);
         }
+
         private bool OpenToDoList() 
         {
             Console.WriteLine("Enter an id of the list");
@@ -334,6 +346,7 @@ namespace ToDoListAapp.View
                 return ToDoListManagmentMenu();
             }
         }
+
         private void AddToTask()
         {
             Console.WriteLine("Enter a name for the task");
@@ -354,16 +367,19 @@ namespace ToDoListAapp.View
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }
+
         private void ListAllTasks()
         {
             _taskService.ListAllTasks();
         }
+
         private void DeleteTask()
         {
             Console.WriteLine("Enter a id of the task");
             int taskId = Convert.ToInt32(Console.ReadLine());
             _taskService.DeleteTask(taskId);
         }
+
         private void EditTask()
         {
             Console.WriteLine("Enter an Id of the task");

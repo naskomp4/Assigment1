@@ -12,6 +12,7 @@ namespace ToDoListApp.Services
     {
         private readonly UserStorage _userStorage;
         public User CurrentUser { get; private set; }
+
         public UserService(UserStorage fileStorage)
         {
             _userStorage = fileStorage;
@@ -28,10 +29,11 @@ namespace ToDoListApp.Services
             user.Password = password;
             user.FirstName = firstName;
             user.LastName = lastName;
-            user.DateOfLastChange = DateTime.Now;
-            user.LastModifierId = CurrentUser.Id;
+            user.LastModified = DateTime.Now;
+            user.LastModifiedId = CurrentUser.Id;
             _userStorage.Edit(user);
         }
+
         public void CreateUser(string name, string password, string firstName, string lastname, Role role)
         {
             if (_userStorage.ReadAll().Any(u => u.Name == name))
@@ -49,12 +51,11 @@ namespace ToDoListApp.Services
                 LastName = lastname,
                 Role = role,
                 CreatorId = CurrentUser != null ? CurrentUser.Id : 1,
-                DateOfLastChange = now,
-                LastModifierId = CurrentUser != null ? CurrentUser.Id : 1,
+                LastModified = now,
+                LastModifiedId = CurrentUser != null ? CurrentUser.Id : 1,
             };
             _userStorage.Add(user);
         }
-
         public void DeleteUser(int id)
         {
             _userStorage.Delete(id);
@@ -73,8 +74,8 @@ namespace ToDoListApp.Services
                 Console.WriteLine($"User role:                  {item.Role}");
                 Console.WriteLine($"User date of creation:      {item.CreatedAt}");
                 Console.WriteLine($"User creator id:            {item.CreatorId}");
-                Console.WriteLine($"User date of last change:   {item.DateOfLastChange}");
-                Console.WriteLine($"User last modifier id:      {item.LastModifierId}\n");
+                Console.WriteLine($"User date of last change:   {item.LastModified}");
+                Console.WriteLine($"User last modifier id:      {item.LastModifiedId}\n");
             }
         }
 

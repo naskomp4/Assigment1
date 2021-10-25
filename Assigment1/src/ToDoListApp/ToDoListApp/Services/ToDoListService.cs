@@ -21,7 +21,6 @@ namespace ToDoListApp.Services
             _userService = userService;
         }
 
-
         public void CrateToDoList(string title)
         {
             if (_toDoListStorage.ReadAll().Any(l => l.Title == title && l.CreatorId == _userService.CurrentUser.Id))
@@ -35,11 +34,12 @@ namespace ToDoListApp.Services
                 Id = _toDoListStorage.GetNextId(),
                 CreatedAt = now,
                 CreatorId = _userService.CurrentUser.Id,
-                DateOfLastChange = now,
-                LastModifierId = _userService.CurrentUser.Id,
+                LastModified = now,
+                LastModifiedId = _userService.CurrentUser.Id,
             };
             _toDoListStorage.Add(toDoList);
         }
+
         public void ListAllToDoLists()
         {
             var listAll = _toDoListStorage.ReadAll();
@@ -51,11 +51,12 @@ namespace ToDoListApp.Services
                     Console.WriteLine($"List name:                  {item.Title}");
                     Console.WriteLine($"List date of creation:      {item.CreatedAt}");
                     Console.WriteLine($"List creator id:            {item.CreatorId}");
-                    Console.WriteLine($"List date of last change:   {item.DateOfLastChange}");
-                    Console.WriteLine($"List last modifier id:      {item.LastModifierId}\n");
+                    Console.WriteLine($"List date of last change:   {item.LastModified}");
+                    Console.WriteLine($"List last modifier id:      {item.LastModifiedId}\n");
                 }
             }
         }
+
         public void DeleteToDoLIst(int currentListId)
         {
             if (_toDoListStorage.Read(currentListId).CreatorId == _userService.CurrentUser.Id)
@@ -63,6 +64,7 @@ namespace ToDoListApp.Services
                 _toDoListStorage.Delete(currentListId);
             }
         }
+
         public void EditToDoList(string title, int currentListId)
         {
             var singleToDoList = _toDoListStorage.Read(currentListId);
@@ -71,8 +73,8 @@ namespace ToDoListApp.Services
                 throw new Exception($"You are not the creator of the ToDo list ");
             }
             singleToDoList.Title = title;
-            singleToDoList.DateOfLastChange = DateTime.Now;
-            singleToDoList.LastModifierId = _userService.CurrentUser.Id;
+            singleToDoList.LastModified = DateTime.Now;
+            singleToDoList.LastModifiedId = _userService.CurrentUser.Id;
             _toDoListStorage.Edit(singleToDoList);
         }
     }

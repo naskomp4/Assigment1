@@ -12,6 +12,7 @@ namespace ToDoListApp.View.ViewHelper
             Console.WriteLine("1. Login");
             Console.WriteLine("2. Exit");
         }
+
         public void PrintMainMenu()
         {
             PrintColoredString("--------Main Menu--------");
@@ -19,6 +20,7 @@ namespace ToDoListApp.View.ViewHelper
             Console.WriteLine("2. ToDo List Management");
             Console.WriteLine("3. Exit");
         }
+
         public void PrintMainAdminMenu()
         {
             PrintColoredString("--------Main Menu--------");
@@ -27,6 +29,7 @@ namespace ToDoListApp.View.ViewHelper
             Console.WriteLine("3. ToDo List Management");
             Console.WriteLine("4. Exit");
         }
+
         public void PrintUsersManegment()
         {
             PrintColoredString("--Users Managment Menu--");
@@ -37,6 +40,7 @@ namespace ToDoListApp.View.ViewHelper
             Console.WriteLine("5. Back");
             Console.WriteLine("6. Exit ");
         }
+
         public void PrintTodoListManagment()
         {
             PrintColoredString("--ToDo List Managment Menu--");
@@ -70,6 +74,7 @@ namespace ToDoListApp.View.ViewHelper
         {
             PrintColoredString("Unknown command", ConsoleColor.Red);
         }
+
         public void PrintNotLogged()
         {
             PrintColoredString("You are not logged in", ConsoleColor.Red);
@@ -80,6 +85,4 @@ namespace ToDoListApp.View.ViewHelper
             PrintColoredString("Logged out successfully", ConsoleColor.Green);
         }
     }
-
-
 }

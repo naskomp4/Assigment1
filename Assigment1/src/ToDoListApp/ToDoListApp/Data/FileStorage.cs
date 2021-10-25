@@ -15,6 +15,7 @@ namespace ToDoListApp.Data
         private int _idIndex;
 
         private Dictionary<int, T> _entitiesDictionary = new Dictionary<int, T>();
+
         public FileStorage()
         {
             if (!File.Exists(FileName))
@@ -32,10 +33,12 @@ namespace ToDoListApp.Data
         {
             return _entitiesDictionary.Count == 0;
         }
+
         public int GetNextId()
         {
             return ++_idIndex;
         }
+
         public void Add(T data)
         {
             if (!_entitiesDictionary.ContainsKey(data.Id))
@@ -59,7 +62,6 @@ namespace ToDoListApp.Data
             }
             throw new Exception($"Entity with id:{data.Id} does not exist");
         }
-
 
         public T Read(int Id)
         {
