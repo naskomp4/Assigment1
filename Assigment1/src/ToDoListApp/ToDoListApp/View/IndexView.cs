@@ -395,24 +395,23 @@ namespace ToDoListAapp.View
             catch (Exception)
             {
                 _consoleWriter.PrintException();
-                return TasksManagmentMenu();
+                return ToDoListManagmentMenu();
             }
         }
 
         private void AddToTask()
         {
-            Console.WriteLine("Enter a name for the task");
-            string title = Console.ReadLine();
-            Console.WriteLine("Enter a description for the task");
-            string description = Console.ReadLine();
-
             try
             {
+                Console.WriteLine("Enter a name for the task");
+                string title = Console.ReadLine();
+                Console.WriteLine("Enter a description for the task");
+                string description = Console.ReadLine();
                 Console.WriteLine("Choose the task complition: Finished or Unfinished");
                 var istTaslComplete = Enum.Parse<CompletionStatus>(Console.ReadLine());
                 _taskService.CreateTask(title, description, istTaslComplete);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
                 _consoleWriter.PrintException();
             }
@@ -431,7 +430,7 @@ namespace ToDoListAapp.View
                 int taskId = Convert.ToInt32(Console.ReadLine());
                 _taskService.DeleteTask(taskId);
             }
-            catch
+            catch (Exception)
             {
                 _consoleWriter.PrintException();
             }
